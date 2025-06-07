@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Finance Manager</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+<div id="root" class="min-h-screen flex items-center justify-center"></div>
+<script type="text/babel">
+  function App() {
+    const features = [
+      'Add, edit and delete transactions',
+      'View summaries of daily expenses',
+      'Simple, no sign up required'
+    ];
+    return (
+      <div className="text-center p-8 max-w-xl">
+        <h1 className="text-4xl font-bold mb-4">Daily Finance Manager</h1>
+        <p className="mb-6">A lightweight tool to track your everyday spending.</p>
+        <ul className="text-left mb-6 list-disc list-inside">
+          {features.map(f => <li key={f}>{f}</li>)}
+        </ul>
+        <div className="mb-6">
+          <span className="text-yellow-400 text-2xl">★★★★★</span>
+          <p className="text-sm">Rated 4.5/5 by our users</p>
+        </div>
+        <a href="/app.html" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Open App</a>
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

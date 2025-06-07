@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Finance Manager</title>
+  <style>
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 8px; }
+    th { background-color: #f2f2f2; }
+  </style>
+</head>
+<body>
+  <h1>Daily Finance Manager</h1>
+  <form id="transaction-form">
+    <input type="hidden" id="transaction-id">
+    <label>Description: <input type="text" id="description" required></label>
+    <label>Amount: <input type="number" id="amount" required></label>
+    <button type="submit">Save</button>
+  </form>
+
+  <table id="transactions-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Description</th>
+        <th>Amount</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+<script>
+const tableBody = document.querySelector('#transactions-table tbody');
+const form = document.getElementById('transaction-form');
+const idInput = document.getElementById('transaction-id');
+const descInput = document.getElementById('description');
+const amountInput = document.getElementById('amount');
+
+function fetchTransactions() {
+  fetch('/api/transactions')
+    .then(res => res.json())
+    .then(data => {
+      tableBody.innerHTML = '';
+      data.forEach(t => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${t.id}</td><td>${t.description}</td><td>${t.amount}</td><td>${t.date}</td>` +
+                        `<td><button onclick="editTransaction(${t.id})">Edit</button>` +
+                        `<button onclick="deleteTransaction(${t.id})">Delete</button></td>`;
+        tableBody.appendChild(row);
+      });
+    });
+}
+
+function editTransaction(id) {
+  fetch(`/api/transactions/${id}`)
+    .then(res => res.json())
+    .then(data => {
+      idInput.value = data.id;
+      descInput.value = data.description;
+      amountInput.value = data.amount;
+    });
+}
+
+function deleteTransaction(id) {
+  fetch(`/api/transactions/${id}`, { method: 'DELETE' })
+    .then(fetchTransactions);
+}
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const id = idInput.value;
+  const payload = { description: descInput.value, amount: parseFloat(amountInput.value) };
+  const method = id ? 'PUT' : 'POST';
+  const url = id ? `/api/transactions/${id}` : '/api/transactions';
+  fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+    .then(() => {
+      form.reset();
+      idInput.value = '';
+      fetchTransactions();
+    });
+});
+
+fetchTransactions();
+</script>
+</body>
+</html>
