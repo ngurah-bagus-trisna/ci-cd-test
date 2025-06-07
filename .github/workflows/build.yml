@@ -20,6 +20,7 @@ jobs:
           IMAGE=${{ secrets.DOCKER_USERNAME }}/ci-test
           TAG=${{github.sha}}
           docker build -t $IMAGE:$TAG .
+          docker tag $IMAGE:$TAG $IMAGE:latest
       - name: Push image to Docker Hub
         run: |
           IMAGE=${{ secrets.DOCKER_USERNAME }}/ci-test
