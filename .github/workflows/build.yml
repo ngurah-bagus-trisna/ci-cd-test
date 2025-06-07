@@ -17,7 +17,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build & tag image
         run: |
-          IMAGE=${ secrets.DOCKER_USERNAME }/ci-test
+          IMAGE=ngurahbagustrisna/ci-test
           TAG=${ github.sha }
           docker build -t $IMAGE:$TAG .
       - name: Push image to Docker Hub
