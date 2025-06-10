@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ci-simple-app
+  name: ci-simple-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ci-simple-app
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ci-simple-app
+    spec:
+      containers:
+      - image: ngurahbagustrisna/ci-test:latest
+        name: ci-test
+        resources: {}
+status: {}

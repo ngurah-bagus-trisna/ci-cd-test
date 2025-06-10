@@ -27,3 +27,24 @@ jobs:
           TAG=${{ github.sha }}
           docker push $IMAGE:$TAG
           docker push $IMAGE:latest
+
+  deploy:
+    runs-on: self-hosted
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy to Kubernetes
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: Set up Kubernetes context
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $HOME/.kube/config
+      
+      - name: Apply Kubernetes manifests
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
