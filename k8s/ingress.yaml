@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  creationTimestamp: null
+  name: ci-simple-app
+spec:
+  ingressClassName: trafeik
+  rules:
+  - host: nb.test.lab
+    http:
+      paths:
+      - backend:
+          service:
+            name: ci-simple-app
+            port:
+              name: http
+        path: /
+        pathType: Prefix
+status:
+  loadBalancer: {}
