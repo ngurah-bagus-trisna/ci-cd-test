@@ -46,6 +46,12 @@ jobs:
       
       - name: Apply Kubernetes manifests
         run: |
+          set -e
           export GITHUB_SHA=${{ github.sha }}
           envsubst < k8s/deployment.yaml | kubectl apply -f -
+          kubectl rollout status deployment/ci-simple-app || (
+            echo "Deployment failed, Attempting to roll back..."
+            kubectl rollout undo deployment/ci-simple-app || echo "Rollback failed, please check the deployment manually."
+            exit 1
+          )
           kubectl apply -f k8s/service.yaml
